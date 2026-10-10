@@ -13,3 +13,6 @@ start-server.cmd
 
 # 本地/部署配置：含 access token、访问码等，不进仓库（模板见 config.example.js）
 miniprogram/config.js
+
+# 部署速查（含当前访问码/公网地址）
+DEPLOY-INFO.txt
