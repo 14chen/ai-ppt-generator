@@ -1,0 +1,59 @@
+<view class="player t-{{theme}}" style="padding-top: {{safeTop}}px;">
+
+  <!-- 舞台：固定 1280x720 设计画布，按屏幕等比缩放 -->
+  <view
+    class="stage"
+    style="width: {{stageW}}rpx; height: {{stageH}}rpx;"
+    bindtouchstart="onTouchStart"
+    bindtouchend="onTouchEnd"
+  >
+    <view class="stage-scale" style="transform: scale({{scale}});">
+      <slide
+        slide="{{slides[index]}}"
+        index="{{index}}"
+        total="{{total}}"
+        deckTitle="{{slides.length ? '' : ''}}"
+        theme="{{theme}}"
+      ></slide>
+    </view>
+  </view>
+
+  <!-- 点击区：左 上一页 / 中 显隐 HUD / 右 下一页 -->
+  <view class="zones">
+    <view class="zone" data-zone="prev" bindtap="onTapZone"></view>
+    <view class="zone" data-zone="center" bindtap="onTapZone"></view>
+    <view class="zone" data-zone="next" bindtap="onTapZone"></view>
+  </view>
+
+  <!-- 顶部返回 -->
+  <view class="top-bar" style="top: {{safeTop}}px;">
+    <view class="round-btn" bindtap="onBack">✕</view>
+    <text class="top-label">{{layoutText}}</text>
+  </view>
+
+  <!-- 演讲备注 -->
+  <view wx:if="{{notesVisible}}" class="notes">
+    <text class="notes-title">演讲者备注</text>
+    <text class="notes-body">{{notes}}</text>
+  </view>
+
+  <!-- 底部 HUD -->
+  <view wx:if="{{hudVisible}}" class="hud">
+    <view class="hud-btn" data-zone="prev" bindtap="onTapZone">‹</view>
+    <view class="dots">
+      <view
+        wx:for="{{slides}}"
+        wx:for-index="di"
+        wx:key="di"
+        class="dot {{di === index ? 'is-active' : ''}}"
+        data-index="{{di}}"
+        bindtap="onJump"
+      ></view>
+    </view>
+    <text class="counter">{{index + 1}} / {{total}}</text>
+    <view class="hud-btn hud-btn-sm" bindtap="onCycleTheme">🎨</view>
+    <view wx:if="{{notes}}" class="hud-btn hud-btn-sm" bindtap="onToggleNotes">📝</view>
+    <view class="hud-btn hud-btn-sm" bindtap="onExport">⤓</view>
+  </view>
+
+</view>

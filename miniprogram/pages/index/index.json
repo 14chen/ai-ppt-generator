@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "slide": "/components/slide/slide"
+  },
+  "navigationBarTitleText": "AI 网页 PPT",
+  "enablePullDownRefresh": false
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+logs/
+bin/
+test-results/
+playwright-report/
+.env
+.env.local
+start-server.cmd
+*.log
+.DS_Store
+.vite/
+
+# 部署时生成的文件（含密钥/隧道地址），不要提交
+miniprogram/config.js.bak

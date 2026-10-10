@@ -1,0 +1,1230 @@
+<!doctype html>
+<html lang="zh-CN" data-ppt-export="1">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="generator" content="AI 网页 PPT 生成器 · 导出时间 2026/10/10 18:05:50">
+<title>星尘X1智能会议终端发布</title>
+<style>
+html, body { margin: 0; padding: 0; height: 100%; background: #0b1020; }
+#ppt-app { position: fixed; inset: 0; }
+@media print { html, body { background: #fff; } #ppt-app { position: static; } }
+</style>
+<style>
+/* =========================================================================
+   AI Web PPT — slide + player styles (shared by the app and the export).
+   All colours come from CSS custom properties that the runtime sets on the
+   player root element, so themes live in runtime.js only.
+   The slide is a fixed 1280x720 design canvas that the runtime scales to fit
+   any viewport -> identical layout on desktop, tablet and phone.
+   ========================================================================= */
+
+/* ------------------------------------------------------------------ player */
+
+.ppt-player {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(1200px 700px at 12% -10%, var(--ppt-page-bg2) 0%, transparent 60%),
+    var(--ppt-page-bg);
+  color: var(--ppt-text);
+  font-family: var(--ppt-font-body);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ppt-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ppt-canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1280px;
+  height: 720px;
+  transform: translate(-50%, -50%) scale(var(--ppt-scale, 1));
+  transform-origin: center center;
+}
+
+/* ------------------------------------------------------------------- slide */
+
+.ppt-slide {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(158deg, var(--ppt-slide-bg) 0%, var(--ppt-slide-bg2) 100%);
+  color: var(--ppt-text);
+  border-radius: 10px;
+  box-shadow: var(--ppt-shadow);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px);
+  transition: opacity .42s cubic-bezier(.22, .61, .36, 1), transform .42s cubic-bezier(.22, .61, .36, 1), visibility .42s;
+  will-change: opacity, transform;
+}
+
+.ppt-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.ppt-slide::before {
+  /* soft accent wash in the top-left corner */
+  content: '';
+  position: absolute;
+  left: -180px;
+  top: -220px;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--ppt-accent) 0%, transparent 68%);
+  opacity: .13;
+  pointer-events: none;
+}
+
+.ppt-inner {
+  position: absolute;
+  inset: 0;
+  padding: 58px 72px 92px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ppt-inner-center {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.ppt-head { position: relative; z-index: 2; flex: 0 0 auto; }
+
+.ppt-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 46px;
+  padding: 0 12px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  background: var(--ppt-chip-bg);
+  border: 1px solid var(--ppt-line);
+  font-size: 26px;
+  line-height: 1;
+}
+
+.ppt-title {
+  margin: 0;
+  font-family: var(--ppt-font-title);
+  font-size: 46px;
+  line-height: 1.16;
+  font-weight: 800;
+  letter-spacing: -.5px;
+  text-wrap: balance;
+}
+
+.ppt-title-lg { font-size: 62px; }
+.ppt-title-xl { font-size: 78px; letter-spacing: -1.5px; }
+
+.ppt-sub {
+  margin: 12px 0 0;
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--ppt-dim);
+  max-width: 1000px;
+}
+
+.ppt-sub-lg { font-size: 27px; }
+
+.ppt-body {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ppt-foot {
+  position: absolute;
+  left: 72px;
+  right: 72px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15px;
+  color: var(--ppt-dim);
+  letter-spacing: .4px;
+  z-index: 3;
+}
+
+.ppt-brand {
+  max-width: 78%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: .85;
+}
+
+.ppt-num { font-variant-numeric: tabular-nums; font-weight: 700; }
+
+/* ----------------------------------------------------------------- bullets */
+
+.ppt-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 22px; }
+
+.ppt-li { display: flex; gap: 18px; align-items: flex-start; font-size: 30px; line-height: 1.45; }
+
+.ppt-li-mark {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  margin-top: 15px;
+  border-radius: 3px;
+  background: linear-gradient(135deg, var(--ppt-accent), var(--ppt-accent2));
+  transform: rotate(45deg);
+}
+
+.ppt-li-text { flex: 1 1 auto; }
+.ppt-list-sm .ppt-li { font-size: 25px; gap: 14px; }
+.ppt-list-sm .ppt-li-mark { margin-top: 12px; width: 10px; height: 10px; }
+
+/* -------------------------------------------------------------- cover/close */
+
+.ppt-cover, .ppt-closing {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 90px 60px;
+}
+
+.ppt-cover-inner { position: relative; z-index: 2; max-width: 1040px; }
+
+.ppt-kicker {
+  margin: 0 0 18px;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ppt-accent);
+}
+
+.ppt-kicker-lg { font-size: 26px; letter-spacing: 1px; text-transform: none; margin-top: 20px; color: var(--ppt-dim); font-weight: 500; }
+
+.ppt-rule {
+  display: block;
+  width: 92px;
+  height: 6px;
+  margin: 30px auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--ppt-accent), var(--ppt-accent2));
+}
+
+.ppt-cover-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 14px;
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ppt-cover-meta li {
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: var(--ppt-chip-bg);
+  border: 1px solid var(--ppt-line);
+  color: var(--ppt-dim);
+  font-size: 19px;
+}
+
+.ppt-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: .42;
+  pointer-events: none;
+}
+
+.ppt-glow-a { width: 520px; height: 520px; left: -120px; bottom: -190px; background: var(--ppt-accent); }
+.ppt-glow-b { width: 460px; height: 460px; right: -110px; top: -170px; background: var(--ppt-accent2); }
+
+/* ---------------------------------------------------------------- section */
+
+.ppt-section { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+
+.ppt-section-idx {
+  font-size: 130px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -4px;
+  background: linear-gradient(135deg, var(--ppt-accent), var(--ppt-accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: .9;
+}
+
+/* ------------------------------------------------------------------ stats */
+
+.ppt-stats { display: flex; gap: 26px; align-items: stretch; }
+
+.ppt-stat {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 30px 26px;
+  border-radius: 20px;
+  background: var(--ppt-chip-bg);
+  border: 1px solid var(--ppt-line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+.ppt-stat-value {
+  font-size: 58px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, var(--ppt-accent), var(--ppt-accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ppt-stat-label { font-size: 21px; color: var(--ppt-dim); line-height: 1.4; }
+
+/* ------------------------------------------------------------------ quote */
+
+.ppt-quote {
+  margin: 0;
+  padding: 34px 40px 34px 46px;
+  border-left: 6px solid var(--ppt-accent);
+  border-radius: 10px;
+  background: var(--ppt-quote-bg);
+  position: relative;
+}
+
+.ppt-quote-mark {
+  position: absolute;
+  left: 18px;
+  top: -6px;
+  font-size: 96px;
+  line-height: 1;
+  color: var(--ppt-accent);
+  opacity: .28;
+  font-family: Georgia, serif;
+}
+
+.ppt-quote-text { margin: 0; font-size: 40px; line-height: 1.42; font-weight: 600; text-wrap: balance; }
+
+.ppt-quote-author { margin-top: 20px; font-size: 21px; color: var(--ppt-dim); }
+
+/* --------------------------------------------------------------- timeline */
+
+.ppt-timeline { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 20px; }
+
+.ppt-step { display: flex; gap: 20px; align-items: flex-start; }
+
+.ppt-step-dot {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ppt-slide-bg);
+  background: linear-gradient(135deg, var(--ppt-accent), var(--ppt-accent2));
+}
+
+.ppt-step-body { flex: 1 1 auto; min-width: 0; }
+.ppt-step-title { margin: 6px 0 0; font-size: 27px; font-weight: 700; line-height: 1.3; }
+.ppt-step-detail { margin: 6px 0 0; font-size: 21px; line-height: 1.45; color: var(--ppt-dim); }
+
+/* ----------------------------------------------------------------- columns */
+
+.ppt-columns { display: grid; gap: 24px; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+.ppt-columns[data-count="1"] { grid-auto-flow: row; }
+
+.ppt-column {
+  padding: 26px 28px;
+  border-radius: 18px;
+  background: var(--ppt-chip-bg);
+  border: 1px solid var(--ppt-line);
+  min-width: 0;
+}
+
+.ppt-col-title {
+  margin: 0 0 16px;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ppt-accent);
+  letter-spacing: .3px;
+}
+
+.ppt-column .ppt-list { gap: 14px; }
+
+/* ------------------------------------------------------------- player chrome */
+
+.ppt-progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: color-mix(in srgb, var(--ppt-text) 12%, transparent);
+  z-index: 20;
+}
+
+.ppt-progress > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--ppt-accent), var(--ppt-accent2));
+  transition: width .3s ease;
+}
+
+.ppt-hud {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ppt-slide-bg) 82%, transparent);
+  border: 1px solid var(--ppt-line);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .22);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 25;
+  max-width: calc(100% - 24px);
+  opacity: .28;
+  transition: opacity .25s ease;
+}
+
+.ppt-player:hover .ppt-hud,
+.ppt-player:focus-within .ppt-hud { opacity: 1; }
+
+.ppt-hud-group { display: flex; align-items: center; gap: 8px; }
+
+.ppt-btn {
+  appearance: none;
+  border: 1px solid var(--ppt-line);
+  background: var(--ppt-chip-bg);
+  color: var(--ppt-text);
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  transition: transform .15s ease, background .15s ease;
+}
+
+.ppt-btn:hover { transform: translateY(-1px); background: var(--ppt-slide-bg2); }
+.ppt-btn:active { transform: translateY(0) scale(.97); }
+.ppt-btn:focus-visible { outline: 2px solid var(--ppt-accent); outline-offset: 2px; }
+.ppt-btn-sm { font-size: 16px; height: 38px; min-width: 38px; }
+
+.ppt-dots { display: flex; align-items: center; gap: 7px; flex-wrap: nowrap; overflow: hidden; max-width: 42vw; }
+
+.ppt-dot {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ppt-dim);
+  opacity: .38;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: all .2s ease;
+}
+
+.ppt-dot[aria-current="true"] {
+  opacity: 1;
+  width: 22px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--ppt-accent), var(--ppt-accent2));
+}
+
+.ppt-counter { font-size: 15px; color: var(--ppt-dim); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.ppt-notes {
+  position: absolute;
+  left: 50%;
+  bottom: 84px;
+  transform: translateX(-50%);
+  width: min(880px, calc(100% - 40px));
+  background: color-mix(in srgb, var(--ppt-slide-bg) 94%, transparent);
+  border: 1px solid var(--ppt-line);
+  border-radius: 16px;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .28);
+  z-index: 24;
+}
+
+.ppt-rotate-hint {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--ppt-text);
+  background: color-mix(in srgb, var(--ppt-slide-bg) 88%, transparent);
+  border: 1px solid var(--ppt-line);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .3);
+  animation: ppt-hint-in .3s ease;
+  pointer-events: none;
+}
+
+@keyframes ppt-hint-in {
+  from { opacity: 0; transform: translate(-50%, -8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.ppt-notes-inner { padding: 16px 20px; font-size: 15px; line-height: 1.6; }
+.ppt-notes-inner b { font-size: 13px; letter-spacing: 1px; color: var(--ppt-accent); }
+.ppt-notes-inner p { margin: 6px 0 0; color: var(--ppt-dim); white-space: pre-wrap; }
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 900px) {
+  .ppt-hud { gap: 10px; padding: 7px 10px; bottom: 14px; }
+  .ppt-dots { max-width: 26vw; }
+  .ppt-counter { display: none; }
+  .ppt-notes { bottom: 72px; }
+}
+
+@media (max-width: 640px) {
+  .ppt-hud { opacity: .92; gap: 8px; }
+  .ppt-dots { display: none; }
+  .ppt-btn { min-width: 38px; height: 38px; font-size: 17px; }
+  .ppt-btn-sm { height: 34px; min-width: 34px; font-size: 14px; }
+  /* the theme name would wrap onto several lines in a narrow HUD */
+  .ppt-btn [data-theme-label] { display: none; }
+  .ppt-notes { bottom: 66px; }
+}
+
+@media (hover: none) {
+  .ppt-hud { opacity: .95; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ppt-slide { transition: opacity .01ms, visibility .01ms; transform: none; }
+  .ppt-slide.is-active { transform: none; }
+}
+
+/* -------------------------------------------------------------------- print */
+
+@page { size: 1280px 720px; margin: 0; }
+
+@media print {
+  .ppt-player { position: static; display: block; background: #fff; overflow: visible; }
+  .ppt-stage { position: static; overflow: visible; }
+  .ppt-canvas { position: static; transform: none !important; width: auto; height: auto; }
+  .ppt-slide {
+    position: relative;
+    inset: auto;
+    width: 1280px;
+    height: 720px;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    box-shadow: none;
+    border-radius: 0;
+    page-break-after: always;
+    break-after: page;
+  }
+  .ppt-hud, .ppt-progress, .ppt-notes { display: none !important; }
+}
+
+</style>
+</head>
+<body>
+<div id="ppt-app"></div>
+<noscript><p style="color:#fff;font:16px system-ui;padding:24px">这份演示需要启用 JavaScript 才能翻页。</p></noscript>
+
+<script id="ppt-deck" type="application/json">{"version":1,"title":"星尘X1智能会议终端发布","subtitle":"重新定义会议效率","theme":"midnight","slides":[{"layout":"cover","title":"星尘X1智能会议终端发布","subtitle":"智能会议，即刻就绪","bullets":["产品发布","4月15日正式发售","星尘X1"],"index":0},{"layout":"bullets","title":"会议记录，为何如此繁琐","subtitle":"","icon":"📝","bullets":["手动记录容易遗漏要点","背景噪声干扰语音识别","多平台待办无法自动同步"],"notes":"引出产品解决的核心痛点","index":1},{"layout":"stats","title":"核心性能指标","subtitle":"","stats":[{"value":"8个","label":"麦克风环形阵列"},{"value":"6米","label":"拾音半径"},{"value":"96.4%","label":"45分贝噪声下识别准确率"},{"value":"30秒","label":"会后生成纪要"}],"index":2},{"layout":"two-column","title":"功能详解","subtitle":"","columns":[{"heading":"智能拾音与识别","items":["8麦克风环形阵列","拾音半径6米","45分贝噪声下96.4%准确率"]},{"heading":"纪要生成与同步","items":["会后30秒生成纪要","自动提取待办","同步企业微信、飞书、钉钉"]}],"index":3},{"layout":"bullets","title":"部署模式与定价","subtitle":"","icon":"💰","bullets":["公有云、私有化、完全离线三种部署","硬件售价4980元","专业版服务每年1980元","4月15日正式发售"],"notes":"强调灵活部署和透明定价","index":4},{"layout":"closing","title":"谢谢观看","subtitle":"星尘X1，让每一次会议都有价值","index":5}],"meta":{"slideCount":6,"requested":6,"generatedAt":"2026-10-10T10:05:47.364Z","model":"deepseek-v4-pro","sourceChars":156,"elapsedMs":22138,"fromWholeBuffer":false,"usage":{"prompt_tokens":839,"completion_tokens":1722,"total_tokens":2561,"prompt_tokens_details":{"cached_tokens":768},"completion_tokens_details":{"reasoning_tokens":1353},"prompt_cache_hit_tokens":768,"prompt_cache_miss_tokens":71}}}</script>
+
+<!-- player runtime (identical code to the editor preview) -->
+<script>
+/*!
+ * AI Web PPT — slide player runtime (single source of truth).
+ *
+ * This file is intentionally written as a CLASSIC script (no `import` / `export`,
+ * no top-level await) so that the very same source can be used in two ways:
+ *   1. the app injects it into a <script> tag (see loadRuntime.ts)
+ *   2. the "export standalone HTML" feature inlines it verbatim
+ * That guarantees the exported deck renders exactly like the in-app player.
+ *
+ * Public API (window.PPTPlayer):
+ *   THEMES, themes, getTheme(id), applyTheme(el, id)
+ *   slideHTML(slide, opts) -> string
+ *   mount(rootEl, deck, options) -> handle
+ *   VERSION
+ */
+(function (global) {
+  'use strict';
+
+  var VERSION = '1.0.0';
+  var DESIGN_W = 1280;
+  var DESIGN_H = 720;
+
+  /* ------------------------------------------------------------------ themes */
+
+  var THEMES = [
+    {
+      id: 'paper',
+      label: '简约白',
+      dark: false,
+      vars: {
+        'ppt-page-bg': '#e9edf4',
+        'ppt-page-bg2': '#dfe6f2',
+        'ppt-slide-bg': '#ffffff',
+        'ppt-slide-bg2': '#f5f8ff',
+        'ppt-text': '#0f1727',
+        'ppt-dim': '#5c6a80',
+        'ppt-accent': '#2f57e6',
+        'ppt-accent2': '#7b5cf5',
+        'ppt-line': '#e2e8f2',
+        'ppt-chip-bg': '#f1f5fc',
+        'ppt-quote-bg': '#f6f8fd',
+        'ppt-shadow': '0 24px 60px rgba(21, 38, 74, .18)',
+        'ppt-font-title': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif',
+        'ppt-font-body': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif'
+      }
+    },
+    {
+      id: 'midnight',
+      label: '深空蓝',
+      dark: true,
+      vars: {
+        'ppt-page-bg': '#05080f',
+        'ppt-page-bg2': '#0a1020',
+        'ppt-slide-bg': '#0e1730',
+        'ppt-slide-bg2': '#152245',
+        'ppt-text': '#eaf1ff',
+        'ppt-dim': '#93a4c9',
+        'ppt-accent': '#3ddcff',
+        'ppt-accent2': '#6c8cff',
+        'ppt-line': '#1e2b4d',
+        'ppt-chip-bg': '#16223f',
+        'ppt-quote-bg': '#101c38',
+        'ppt-shadow': '0 24px 70px rgba(0, 0, 0, .6)',
+        'ppt-font-title': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif',
+        'ppt-font-body': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif'
+      }
+    },
+    {
+      id: 'sunrise',
+      label: '暖阳赤陶',
+      dark: false,
+      vars: {
+        'ppt-page-bg': '#f6ece2',
+        'ppt-page-bg2': '#f1e0d1',
+        'ppt-slide-bg': '#fffaf4',
+        'ppt-slide-bg2': '#fdf1e6',
+        'ppt-text': '#2c1c14',
+        'ppt-dim': '#8a6a58',
+        'ppt-accent': '#dd5a35',
+        'ppt-accent2': '#f0a05a',
+        'ppt-line': '#f0dccd',
+        'ppt-chip-bg': '#fbeade',
+        'ppt-quote-bg': '#fdf1e7',
+        'ppt-shadow': '0 24px 60px rgba(120, 72, 44, .22)',
+        'ppt-font-title': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif',
+        'ppt-font-body': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif'
+      }
+    },
+    {
+      id: 'forest',
+      label: '墨绿森野',
+      dark: true,
+      vars: {
+        'ppt-page-bg': '#05100c',
+        'ppt-page-bg2': '#081913',
+        'ppt-slide-bg': '#0c1f18',
+        'ppt-slide-bg2': '#123026',
+        'ppt-text': '#e9f6ef',
+        'ppt-dim': '#8db3a4',
+        'ppt-accent': '#32d69b',
+        'ppt-accent2': '#a9e05f',
+        'ppt-line': '#1b3a2f',
+        'ppt-chip-bg': '#123026',
+        'ppt-quote-bg': '#0e251d',
+        'ppt-shadow': '0 24px 70px rgba(0, 0, 0, .55)',
+        'ppt-font-title': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif',
+        'ppt-font-body': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif'
+      }
+    },
+    {
+      id: 'neon',
+      label: '霓虹夜色',
+      dark: true,
+      vars: {
+        'ppt-page-bg': '#08040f',
+        'ppt-page-bg2': '#0e0619',
+        'ppt-slide-bg': '#140a24',
+        'ppt-slide-bg2': '#1e0f33',
+        'ppt-text': '#f6ecff',
+        'ppt-dim': '#a98fd0',
+        'ppt-accent': '#ff3ea5',
+        'ppt-accent2': '#7c5cff',
+        'ppt-line': '#2c1a47',
+        'ppt-chip-bg': '#1e0f33',
+        'ppt-quote-bg': '#180c2b',
+        'ppt-shadow': '0 24px 70px rgba(0, 0, 0, .65)',
+        'ppt-font-title': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif',
+        'ppt-font-body': '"PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif'
+      }
+    }
+  ];
+
+  var THEME_MAP = {};
+  for (var i = 0; i < THEMES.length; i++) THEME_MAP[THEMES[i].id] = THEMES[i];
+
+  function getTheme(id) {
+    return THEME_MAP[id] || THEMES[0];
+  }
+
+  function applyTheme(el, id) {
+    var t = getTheme(id);
+    if (!el) return t;
+    el.setAttribute('data-ppt-theme', t.id);
+    if (el.style && el.style.setProperty) {
+      for (var k in t.vars) {
+        if (Object.prototype.hasOwnProperty.call(t.vars, k)) el.style.setProperty('--' + k, t.vars[k]);
+      }
+    }
+    return t;
+  }
+
+  /* ------------------------------------------------------------- html helpers */
+
+  var ESC_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+
+  function esc(v) {
+    if (v === null || v === undefined) return '';
+    return String(v).replace(/[&<>"']/g, function (c) { return ESC_MAP[c]; });
+  }
+
+  function str(v) {
+    if (v === null || v === undefined) return '';
+    if (typeof v === 'string') return v;
+    if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+    return '';
+  }
+
+  function arr(v) {
+    return Array.isArray(v) ? v : [];
+  }
+
+  function textList(v) {
+    var out = [];
+    var list = arr(v);
+    for (var i = 0; i < list.length; i++) {
+      var item = list[i];
+      var s = typeof item === 'string' ? item : str(item && (item.text || item.title || item.label || item.value));
+      s = s.trim();
+      if (s) out.push(s);
+    }
+    return out;
+  }
+
+  /* -------------------------------------------------------------- slide html */
+
+  function num(o) {
+    return '<span class="ppt-num">' + ((o.index || 0) + 1) + '</span>';
+  }
+
+  function footer(o) {
+    var brand = str(o.deckTitle);
+    return '<div class="ppt-foot">' +
+      '<span class="ppt-brand">' + esc(brand) + '</span>' +
+      num(o) +
+      '</div>';
+  }
+
+  function headHTML(s) {
+    var out = '<header class="ppt-head">';
+    if (s.icon) out += '<span class="ppt-chip">' + esc(s.icon) + '</span>';
+    out += '<h2 class="ppt-title">' + esc(s.title) + '</h2>';
+    if (s.subtitle) out += '<p class="ppt-sub">' + esc(s.subtitle) + '</p>';
+    out += '</header>';
+    return out;
+  }
+
+  function frame(s, kind, inner, o) {
+    return '<div class="ppt-inner">' + headHTML(s) +
+      '<div class="ppt-body ppt-body-' + esc(kind) + '">' + inner + '</div>' +
+      footer(o) + '</div>';
+  }
+
+  function bulletsInner(s) {
+    var items = textList(s.bullets);
+    if (!items.length) return '<p class="ppt-empty"></p>';
+    var html = '<ul class="ppt-list">';
+    for (var i = 0; i < items.length; i++) {
+      html += '<li class="ppt-li"><span class="ppt-li-mark"></span><span class="ppt-li-text">' + esc(items[i]) + '</span></li>';
+    }
+    return html + '</ul>';
+  }
+
+  function bodyHTML(s, layout, o) {
+    if (layout === 'cover') {
+      var meta = textList(s.bullets);
+      return '<div class="ppt-cover">' +
+        '<span class="ppt-glow ppt-glow-a"></span><span class="ppt-glow ppt-glow-b"></span>' +
+        '<div class="ppt-cover-inner">' +
+        (s.subtitle ? '<p class="ppt-kicker">' + esc(s.subtitle) + '</p>' : '') +
+        '<h1 class="ppt-title ppt-title-xl">' + esc(s.title || '未命名演示') + '</h1>' +
+        '<span class="ppt-rule"></span>' +
+        (meta.length ? '<ul class="ppt-cover-meta">' + meta.map(function (m) {
+          return '<li>' + esc(m) + '</li>';
+        }).join('') + '</ul>' : '') +
+        '</div>' + footer(o) + '</div>';
+    }
+
+    if (layout === 'closing') {
+      return '<div class="ppt-closing">' +
+        '<span class="ppt-glow ppt-glow-a"></span><span class="ppt-glow ppt-glow-b"></span>' +
+        '<div class="ppt-cover-inner">' +
+        '<h1 class="ppt-title ppt-title-xl">' + esc(s.title || '谢谢观看') + '</h1>' +
+        (s.subtitle ? '<p class="ppt-kicker ppt-kicker-lg">' + esc(s.subtitle) + '</p>' : '') +
+        (textList(s.bullets).length ? '<ul class="ppt-cover-meta">' + textList(s.bullets).map(function (m) {
+          return '<li>' + esc(m) + '</li>';
+        }).join('') + '</ul>' : '') +
+        '</div>' + footer(o) + '</div>';
+    }
+
+    if (layout === 'section') {
+      var sec = '<div class="ppt-section">' +
+        '<span class="ppt-section-idx">' + String((o.index || 0) + 1).padStart(2, '0') + '</span>' +
+        '<h2 class="ppt-title ppt-title-lg">' + esc(s.title) + '</h2>' +
+        (s.subtitle ? '<p class="ppt-sub ppt-sub-lg">' + esc(s.subtitle) + '</p>' : '') +
+        '</div>';
+      return '<div class="ppt-inner ppt-inner-center">' + sec + footer(o) + '</div>';
+    }
+
+    if (layout === 'stats') {
+      var stats = arr(s.stats);
+      var inner = '<div class="ppt-stats">';
+      for (var i = 0; i < stats.length; i++) {
+        var st = stats[i] || {};
+        inner += '<div class="ppt-stat"><span class="ppt-stat-value">' + esc(str(st.value)) + '</span>' +
+          '<span class="ppt-stat-label">' + esc(str(st.label)) + '</span></div>';
+      }
+      inner += '</div>';
+      return frame(s, 'stats', inner, o);
+    }
+
+    if (layout === 'quote') {
+      var q = s.quote || {};
+      var qtext = typeof q === 'string' ? q : str(q.text);
+      var qauthor = typeof q === 'string' ? str(s.subtitle) : str(q.author || s.subtitle);
+      var qi = '<blockquote class="ppt-quote">' +
+        '<span class="ppt-quote-mark">&ldquo;</span>' +
+        '<p class="ppt-quote-text">' + esc(qtext) + '</p>' +
+        (qauthor ? '<footer class="ppt-quote-author">— ' + esc(qauthor) + '</footer>' : '') +
+        '</blockquote>';
+      return frame(s, 'quote', qi, o);
+    }
+
+    if (layout === 'timeline') {
+      var steps = arr(s.steps);
+      var ti = '<ol class="ppt-timeline">';
+      for (var j = 0; j < steps.length; j++) {
+        var step = steps[j] || {};
+        var title = str(step.title || step.label || step.name);
+        var detail = str(step.detail || step.text || step.desc);
+        ti += '<li class="ppt-step"><span class="ppt-step-dot">' + (j + 1) + '</span>' +
+          '<div class="ppt-step-body"><h3 class="ppt-step-title">' + esc(title) + '</h3>' +
+          (detail ? '<p class="ppt-step-detail">' + esc(detail) + '</p>' : '') + '</div></li>';
+      }
+      ti += '</ol>';
+      return frame(s, 'timeline', ti, o);
+    }
+
+    if (layout === 'two-column') {
+      var cols = arr(s.columns);
+      var ci = '<div class="ppt-columns" data-count="' + cols.length + '">';
+      for (var c = 0; c < cols.length; c++) {
+        var col = cols[c] || {};
+        var items = textList(col.items || col.bullets);
+        ci += '<div class="ppt-column"><h3 class="ppt-col-title">' + esc(str(col.heading || col.title)) + '</h3>' +
+          '<ul class="ppt-list ppt-list-sm">' + items.map(function (it) {
+            return '<li class="ppt-li"><span class="ppt-li-mark"></span><span class="ppt-li-text">' + esc(it) + '</span></li>';
+          }).join('') + '</ul></div>';
+      }
+      ci += '</div>';
+      return frame(s, 'two-column', ci, o);
+    }
+
+    return frame(s, 'bullets', bulletsInner(s), o);
+  }
+
+  function slideHTML(slide, opts) {
+    opts = opts || {};
+    var s = slide || {};
+    var layout = str(s.layout) || 'bullets';
+    var o = { index: opts.index || 0, deckTitle: opts.deckTitle || '' };
+    return '<section class="ppt-slide' + (opts.active ? ' is-active' : '') + '"' +
+      ' data-layout="' + esc(layout) + '"' +
+      ' aria-roledescription="slide"' +
+      ' aria-label="第 ' + (o.index + 1) + ' 页"' +
+      '>' + bodyHTML(s, layout, o) + '</section>';
+  }
+
+  /* ------------------------------------------------------------------ player */
+
+  function mount(root, deck, options) {
+    if (!root) throw new Error('PPTPlayer.mount: root element is required');
+    options = options || {};
+    deck = deck || { slides: [] };
+    var slides = arr(deck.slides);
+    if (!slides.length) slides = [{ layout: 'cover', title: str(deck.title) || '空白演示' }];
+
+    var listeners = {};
+    var state = {
+      index: 0,
+      theme: options.theme || deck.theme || THEMES[0].id,
+      notes: !!options.notes,
+      destroyed: false
+    };
+
+    function emit(type, payload) {
+      var l = listeners[type];
+      if (!l) return;
+      for (var i = 0; i < l.length; i++) {
+        try { l[i](payload, state); } catch (e) { /* listener errors must not break the player */ }
+      }
+    }
+
+    function on(type, cb) {
+      (listeners[type] = listeners[type] || []).push(cb);
+      return function () { off(type, cb); };
+    }
+
+    function off(type, cb) {
+      var l = listeners[type];
+      if (!l) return;
+      var i = l.indexOf(cb);
+      if (i >= 0) l.splice(i, 1);
+    }
+
+    var deckTitle = str(deck.title);
+
+    // ---- build DOM
+    root.classList.add('ppt-player');
+    applyTheme(root, state.theme);
+    if (options.chrome === false) root.classList.add('ppt-no-chrome');
+
+    var stageHTML = slides.map(function (s, i) {
+      return slideHTML(s, { index: i, deckTitle: deckTitle, active: i === 0 });
+    }).join('');
+
+    var dotsHTML = slides.map(function (s, i) {
+      return '<button class="ppt-dot" type="button" data-go="' + i + '" aria-label="第 ' + (i + 1) + ' 页"' +
+        (i === 0 ? ' aria-current="true"' : '') + '></button>';
+    }).join('');
+
+    root.innerHTML =
+      '<div class="ppt-stage"><div class="ppt-canvas" data-canvas>' + stageHTML + '</div></div>' +
+      '<div class="ppt-progress"><i data-progress></i></div>' +
+      '<div class="ppt-hud">' +
+      '<div class="ppt-hud-group">' +
+      '<button class="ppt-btn" type="button" data-act="prev" aria-label="上一页" title="上一页 (←)">‹</button>' +
+      '<button class="ppt-btn" type="button" data-act="next" aria-label="下一页" title="下一页 (→ / 空格)">›</button>' +
+      '</div>' +
+      '<div class="ppt-dots" data-dots>' + dotsHTML + '</div>' +
+      '<div class="ppt-hud-group">' +
+      '<span class="ppt-counter" data-counter>1 / ' + slides.length + '</span>' +
+      '<button class="ppt-btn ppt-btn-sm" type="button" data-act="theme" aria-label="切换配色主题" title="切换主题 (T)">🎨 <span data-theme-label></span></button>' +
+      (slides.some(function (s) { return s && s.notes; })
+        ? '<button class="ppt-btn ppt-btn-sm" type="button" data-act="notes" aria-label="演讲者备注" title="演讲者备注 (N)">📝</button>'
+        : '') +
+      '<button class="ppt-btn ppt-btn-sm" type="button" data-act="fullscreen" aria-label="全屏" title="全屏 (F)">⛶</button>' +
+      (options.onClose ? '<button class="ppt-btn ppt-btn-sm" type="button" data-act="close" aria-label="退出演示" title="退出 (Esc)">✕</button>' : '') +
+      '</div>' +
+      '</div>' +
+      '<div class="ppt-notes" data-notes hidden><div class="ppt-notes-inner"><b>演讲者备注</b><p data-notes-body></p></div></div>';
+
+    var stage = root.querySelector('.ppt-stage');
+    var canvas = root.querySelector('[data-canvas]');
+    var slideEls = Array.prototype.slice.call(root.querySelectorAll('.ppt-slide'));
+    var dotEls = Array.prototype.slice.call(root.querySelectorAll('.ppt-dot'));
+    var counterEl = root.querySelector('[data-counter]');
+    var progressEl = root.querySelector('[data-progress]');
+    var themeLabelEl = root.querySelector('[data-theme-label]');
+    var notesEl = root.querySelector('[data-notes]');
+    var notesBody = root.querySelector('[data-notes-body]');
+
+    // ---- scale to fit (fixed 1280x720 design canvas)
+    function fit() {
+      var w = stage.clientWidth || root.clientWidth || DESIGN_W;
+      var h = stage.clientHeight || root.clientHeight || DESIGN_H;
+      var k = Math.min(w / DESIGN_W, h / DESIGN_H);
+      if (!isFinite(k) || k <= 0) k = 1;
+      canvas.style.setProperty('--ppt-scale', String(k));
+    }
+
+    // ---- rendering state
+    function render() {
+      for (var i = 0; i < slideEls.length; i++) {
+        slideEls[i].classList.toggle('is-active', i === state.index);
+        slideEls[i].setAttribute('aria-hidden', i === state.index ? 'false' : 'true');
+      }
+      for (var d = 0; d < dotEls.length; d++) {
+        if (d === state.index) dotEls[d].setAttribute('aria-current', 'true');
+        else dotEls[d].removeAttribute('aria-current');
+      }
+      counterEl.textContent = (state.index + 1) + ' / ' + slides.length;
+      progressEl.style.width = (((state.index + 1) / slides.length) * 100).toFixed(2) + '%';
+      updateNotes();
+    }
+
+    function updateNotes() {
+      if (!notesEl) return;
+      var slide = slides[state.index] || {};
+      notesBody.textContent = str(slide.notes) || '（本页没有备注）';
+      notesEl.hidden = !state.notes;
+    }
+
+    function goTo(i, reason) {
+      i = Math.max(0, Math.min(slides.length - 1, i | 0));
+      if (i === state.index) { render(); return; }
+      state.index = i;
+      render();
+      emit('change', { index: state.index, reason: reason || 'api' });
+    }
+
+    function next() {
+      if (state.index >= slides.length - 1) { emit('end'); return; }
+      goTo(state.index + 1, 'next');
+    }
+
+    function prev() { goTo(state.index - 1, 'prev'); }
+
+    function setTheme(id) {
+      state.theme = getTheme(id).id;
+      applyTheme(root, state.theme);
+      if (themeLabelEl) themeLabelEl.textContent = getTheme(state.theme).label;
+      emit('theme', { theme: state.theme });
+      return state.theme;
+    }
+
+    function cycleTheme() {
+      var idx = 0;
+      for (var i = 0; i < THEMES.length; i++) if (THEMES[i].id === state.theme) idx = i;
+      return setTheme(THEMES[(idx + 1) % THEMES.length].id);
+    }
+
+    function toggleNotes(force) {
+      state.notes = typeof force === 'boolean' ? force : !state.notes;
+      updateNotes();
+      return state.notes;
+    }
+
+    function toggleFullscreen() {
+      var doc = global.document;
+      if (!doc) return false;
+      var fsEl = doc.fullscreenElement || doc.webkitFullscreenElement;
+      if (fsEl) {
+        (doc.exitFullscreen || doc.webkitExitFullscreen || function () {}).call(doc);
+        return false;
+      }
+      var req = root.requestFullscreen || root.webkitRequestFullscreen;
+      if (req) { try { req.call(root); } catch (e) { /* ignore */ } }
+      return true;
+    }
+
+    // ---- events
+    function onClick(e) {
+      var goBtn = e.target.closest ? e.target.closest('[data-go]') : null;
+      if (goBtn) { goTo(Number(goBtn.getAttribute('data-go')), 'dot'); return; }
+      var btn = e.target.closest ? e.target.closest('[data-act]') : null;
+      if (!btn) return;
+      var act = btn.getAttribute('data-act');
+      if (act === 'next') next();
+      else if (act === 'prev') prev();
+      else if (act === 'theme') cycleTheme();
+      else if (act === 'notes') toggleNotes();
+      else if (act === 'fullscreen') toggleFullscreen();
+      else if (act === 'close' && options.onClose) options.onClose();
+    }
+
+    function isTypingTarget(t) {
+      if (!t || !t.tagName) return false;
+      var tag = t.tagName.toLowerCase();
+      return tag === 'input' || tag === 'textarea' || tag === 'select' || t.isContentEditable;
+    }
+
+    function onKeyDown(e) {
+      if (e.defaultPrevented || isTypingTarget(e.target)) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      var k = e.key;
+      if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Spacebar' || k === 'Enter' || k === 'j') {
+        e.preventDefault(); next();
+      } else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'k') {
+        e.preventDefault(); prev();
+      } else if (k === 'Home') { e.preventDefault(); goTo(0, 'home'); }
+      else if (k === 'End') { e.preventDefault(); goTo(slides.length - 1, 'end-key'); }
+      else if (k === 'f' || k === 'F') { e.preventDefault(); toggleFullscreen(); }
+      else if (k === 't' || k === 'T') { e.preventDefault(); cycleTheme(); }
+      else if (k === 'n' || k === 'N') { if (notesEl) { e.preventDefault(); toggleNotes(); } }
+      else if (k === 'Escape') {
+        var doc = global.document;
+        if (doc && (doc.fullscreenElement || doc.webkitFullscreenElement)) return; // browser exits fullscreen itself
+        if (state.notes) { e.preventDefault(); toggleNotes(false); }
+        else if (options.onClose) { e.preventDefault(); options.onClose(); }
+      }
+    }
+
+    var touch = null;
+    function onTouchStart(e) {
+      if (!e.touches || e.touches.length !== 1) { touch = null; return; }
+      touch = { x: e.touches[0].clientX, y: e.touches[0].clientY, t: Date.now() };
+    }
+    function onTouchEnd(e) {
+      if (!touch || !e.changedTouches || !e.changedTouches.length) return;
+      var dx = e.changedTouches[0].clientX - touch.x;
+      var dy = e.changedTouches[0].clientY - touch.y;
+      var dt = Date.now() - touch.t;
+      touch = null;
+      if (dt > 800) return;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        if (dx < 0) next(); else prev();
+      }
+    }
+
+    root.addEventListener('click', onClick);
+    root.addEventListener('touchstart', onTouchStart, { passive: true });
+    root.addEventListener('touchend', onTouchEnd, { passive: true });
+    if (global.document) global.document.addEventListener('keydown', onKeyDown);
+
+    var ro = null;
+    if (global.ResizeObserver) {
+      ro = new ResizeObserver(fit);
+      ro.observe(stage);
+    }
+    global.addEventListener('resize', fit);
+
+    // A 16:9 deck is hard to read on a phone held upright — nudge once.
+    var hintEl = null;
+    var hintTimer = null;
+    function maybeShowRotateHint() {
+      if (!global.document || options.rotateHint === false) return;
+      var portraitPhone = global.innerWidth < 760 && global.innerHeight > global.innerWidth;
+      if (!portraitPhone || hintEl) return;
+      hintEl = global.document.createElement('div');
+      hintEl.className = 'ppt-rotate-hint';
+      hintEl.textContent = '📱 横屏观看更清晰';
+      root.appendChild(hintEl);
+      hintTimer = global.setTimeout(function () {
+        if (hintEl && hintEl.parentNode) hintEl.parentNode.removeChild(hintEl);
+        hintEl = null;
+      }, 4500);
+    }
+
+    setTheme(state.theme);
+    fit();
+    render();
+    maybeShowRotateHint();
+    // double rAF: layout may not be final on the very first frame (fonts/overlay mount)
+    if (global.requestAnimationFrame) {
+      global.requestAnimationFrame(function () { global.requestAnimationFrame(fit); });
+    }
+
+    function destroy() {
+      if (state.destroyed) return;
+      state.destroyed = true;
+      if (ro) ro.disconnect();
+      if (hintTimer) global.clearTimeout(hintTimer);
+      global.removeEventListener('resize', fit);
+      if (global.document) global.document.removeEventListener('keydown', onKeyDown);
+      root.removeEventListener('click', onClick);
+      root.removeEventListener('touchstart', onTouchStart);
+      root.removeEventListener('touchend', onTouchEnd);
+      root.classList.remove('ppt-player', 'ppt-no-chrome');
+      root.innerHTML = '';
+      listeners = {};
+    }
+
+    return {
+      version: VERSION,
+      next: next,
+      prev: prev,
+      goTo: goTo,
+      setTheme: setTheme,
+      cycleTheme: cycleTheme,
+      toggleNotes: toggleNotes,
+      toggleFullscreen: toggleFullscreen,
+      fit: fit,
+      destroy: destroy,
+      on: on,
+      off: off,
+      getState: function () { return { index: state.index, theme: state.theme, notes: state.notes, total: slides.length }; },
+      root: root
+    };
+  }
+
+  global.PPTPlayer = {
+    VERSION: VERSION,
+    DESIGN_W: DESIGN_W,
+    DESIGN_H: DESIGN_H,
+    THEMES: THEMES,
+    themes: THEME_MAP,
+    getTheme: getTheme,
+    applyTheme: applyTheme,
+    esc: esc,
+    slideHTML: slideHTML,
+    mount: mount
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+
+<script>
+(function () {
+  var deck = JSON.parse(document.getElementById('ppt-deck').textContent);
+  var app = document.getElementById('ppt-app');
+  var player = window.PPTPlayer;
+  player.mount(app, deck, { theme: deck.theme || 'midnight' });
+  // Keep the browser tab title in sync with the deck title.
+  if (deck.title) document.title = deck.title;
+})();
+</script>
+</body>
+</html>

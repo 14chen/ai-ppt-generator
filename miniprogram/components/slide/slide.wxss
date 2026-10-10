@@ -1,0 +1,361 @@
+@import "../../styles/themes.wxss";
+
+/* =========================================================================
+   幻灯片样式：设计画布 1280rpx x 720rpx，数值与网页端 slide.css（1280x720 px）
+   一一对应，外层通过 transform: scale(k) 等比缩放。
+   颜色由 .t-<theme> 类提供（styles/themes.wxss，脚本生成）。
+   ========================================================================= */
+
+.s-root {
+  width: 1280rpx;
+  height: 720rpx;
+}
+
+.s-slide {
+  position: relative;
+  width: 1280rpx;
+  height: 720rpx;
+  overflow: hidden;
+  border-radius: 10rpx;
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------ 通用骨架 */
+
+.s-inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 58rpx 72rpx 92rpx;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.s-inner-center {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.s-head {
+  flex: 0 0 auto;
+}
+
+.s-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.s-icon {
+  display: inline-block;
+  margin-bottom: 14rpx;
+  padding: 0 12rpx;
+  height: 52rpx;
+  line-height: 52rpx;
+  border-radius: 14rpx;
+  border: 1rpx solid;
+  font-size: 28rpx;
+}
+
+.s-title {
+  display: block;
+  font-size: 46rpx;
+  line-height: 1.16;
+  font-weight: 800;
+}
+
+.s-title-lg { font-size: 62rpx; }
+.s-title-xl { font-size: 78rpx; line-height: 1.18; }
+
+.s-sub {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  line-height: 1.5;
+}
+
+.s-sub-lg { font-size: 27rpx; }
+
+.s-foot {
+  position: absolute;
+  left: 72rpx;
+  right: 72rpx;
+  bottom: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 15rpx;
+}
+
+.s-brand {
+  max-width: 78%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.s-num { font-weight: 700; }
+
+/* -------------------------------------------------------------------- 列表 */
+
+.s-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.s-li {
+  display: flex;
+  align-items: flex-start;
+  gap: 18rpx;
+  margin-bottom: 22rpx;
+}
+
+.s-li-mark {
+  flex: 0 0 auto;
+  width: 12rpx;
+  height: 12rpx;
+  margin-top: 15rpx;
+  border-radius: 3rpx;
+  transform: rotate(45deg);
+}
+
+.s-li-text {
+  flex: 1 1 auto;
+  font-size: 30rpx;
+  line-height: 1.45;
+}
+
+.s-list-sm .s-li { margin-bottom: 14rpx; gap: 14rpx; }
+.s-list-sm .s-li-text { font-size: 25rpx; }
+.s-list-sm .s-li-mark { width: 10rpx; height: 10rpx; margin-top: 12rpx; }
+
+/* --------------------------------------------------------------- 封面/结尾 */
+
+.s-cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 90rpx 60rpx;
+  box-sizing: border-box;
+}
+
+.s-cover-inner {
+  max-width: 1040rpx;
+}
+
+.s-kicker {
+  display: block;
+  margin-bottom: 18rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  letter-spacing: 3rpx;
+}
+
+.s-kicker-lg {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 26rpx;
+}
+
+.s-rule {
+  width: 92rpx;
+  height: 6rpx;
+  border-radius: 4rpx;
+  margin: 30rpx auto 0;
+}
+
+.s-cover-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14rpx;
+  margin-top: 30rpx;
+}
+
+.s-meta-chip {
+  padding: 9rpx 18rpx;
+  border-radius: 999rpx;
+  border: 1rpx solid;
+  font-size: 19rpx;
+}
+
+.s-glow {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.4;
+}
+
+.s-glow-a {
+  width: 520rpx;
+  height: 520rpx;
+  left: -120rpx;
+  bottom: -190rpx;
+}
+
+.s-glow-b {
+  width: 460rpx;
+  height: 460rpx;
+  right: -110rpx;
+  top: -170rpx;
+}
+
+/* ------------------------------------------------------------------- 章节 */
+
+.s-section-idx {
+  display: block;
+  font-size: 130rpx;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -4rpx;
+}
+
+/* ------------------------------------------------------------------- 数据 */
+
+.s-stats {
+  display: flex;
+  gap: 26rpx;
+  align-items: stretch;
+}
+
+.s-stat {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 30rpx 26rpx;
+  border-radius: 20rpx;
+  border: 1rpx solid;
+  box-sizing: border-box;
+}
+
+.s-stat-value {
+  display: block;
+  font-size: 58rpx;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.s-stat-label {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 21rpx;
+  line-height: 1.4;
+}
+
+/* ------------------------------------------------------------------- 金句 */
+
+.s-quote {
+  position: relative;
+  padding: 34rpx 40rpx 34rpx 46rpx;
+  border-radius: 10rpx;
+  border: 1rpx solid;
+  box-sizing: border-box;
+}
+
+.s-quote-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6rpx;
+}
+
+.s-quote-mark {
+  position: absolute;
+  left: 18rpx;
+  top: -6rpx;
+  font-size: 96rpx;
+  line-height: 1;
+  opacity: 0.28;
+}
+
+.s-quote-text {
+  display: block;
+  font-size: 40rpx;
+  line-height: 1.42;
+  font-weight: 600;
+}
+
+.s-quote-author {
+  display: block;
+  margin-top: 20rpx;
+  font-size: 21rpx;
+}
+
+/* ------------------------------------------------------------------- 流程 */
+
+.s-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.s-step-dot {
+  flex: 0 0 auto;
+  width: 46rpx;
+  height: 46rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.s-step-num {
+  font-size: 20rpx;
+  font-weight: 800;
+}
+
+.s-step-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.s-step-title {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 27rpx;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.s-step-detail {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 21rpx;
+  line-height: 1.45;
+}
+
+/* ------------------------------------------------------------------- 多栏 */
+
+.s-columns {
+  display: flex;
+  gap: 24rpx;
+  align-items: stretch;
+}
+
+.s-column {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 26rpx 28rpx;
+  border-radius: 18rpx;
+  border: 1rpx solid;
+  box-sizing: border-box;
+}
+
+.s-col-title {
+  display: block;
+  margin-bottom: 16rpx;
+  font-size: 26rpx;
+  font-weight: 800;
+}

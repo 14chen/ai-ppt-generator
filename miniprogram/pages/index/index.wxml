@@ -1,0 +1,162 @@
+<view class="page t-{{theme}}">
+
+  <!-- 顶部信息 -->
+  <view class="card hero">
+    <view class="row-between">
+      <view class="grow">
+        <text class="hero-title">AI 网页 PPT 生成器</text>
+        <text class="muted">粘贴长文案 → 流式生成 → 演示 / 导出</text>
+      </view>
+      <view class="badge {{health && health.hasApiKey ? 'badge-accent' : ''}}">
+        {{health ? health.model : '未连接'}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 文案输入 -->
+  <view class="card">
+    <view class="row-between">
+      <text class="card-title">粘贴你的长文案</text>
+      <view class="row">
+        <view class="btn btn-sm btn-ghost" bindtap="onLoadSample">示例</view>
+        <view class="btn btn-sm btn-ghost" bindtap="onClear">清空</view>
+      </view>
+    </view>
+
+    <textarea
+      class="source"
+      value="{{initialText}}"
+      bindinput="onInput"
+      placeholder="把文章、报告、会议记录整段粘贴进来…"
+      placeholder-class="source-ph"
+      maxlength="20000"
+      show-confirm-bar="{{false}}"
+      disable-default-padding="{{true}}"
+      adjust-position="{{true}}"
+    ></textarea>
+
+    <view class="row-between counter-row">
+      <text class="muted">{{charCount}} / {{maxChars}} 字</text>
+      <text wx:if="{{charCount > 0 && charCount < minChars}}" class="muted warn">至少 {{minChars}} 字</text>
+    </view>
+  </view>
+
+  <!-- 生成设置 -->
+  <view class="card">
+    <text class="card-title">生成设置</text>
+
+    <view class="field">
+      <text class="muted">目标页数</text>
+      <view class="segmented">
+        <view
+          wx:for="{{pageChoices}}"
+          wx:for-index="pi"
+          wx:key="pi"
+          class="seg {{targetSlides === item ? 'is-active' : ''}}"
+          data-index="{{pi}}"
+          bindtap="onPickPages"
+        >{{item}}</view>
+      </view>
+    </view>
+
+    <view class="field">
+      <text class="muted">输出语言</text>
+      <picker mode="selector" range="{{languages}}" value="{{languageIndex}}" bindchange="onPickLanguage">
+        <view class="picker">{{languages[languageIndex]}}</view>
+      </picker>
+    </view>
+
+    <view class="field">
+      <text class="muted">配色主题</text>
+      <view class="theme-row">
+        <view
+          wx:for="{{themes}}"
+          wx:for-index="ti"
+          wx:key="ti"
+          class="theme-chip {{theme === item.id ? 'is-active' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="onPickTheme"
+        >
+          <view class="theme-swatch" style="background: linear-gradient(135deg, {{item.vars['ppt-slide-bg']}} 0%, {{item.vars['ppt-accent']}} 100%);"></view>
+          <text>{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 生成按钮 / 进度 -->
+  <view wx:if="{{status !== 'running'}}" class="card">
+    <view
+      class="btn btn-primary btn-block {{charCount < minChars ? 'is-disabled' : ''}}"
+      bindtap="onGenerate"
+    >{{status === 'error' ? '重新生成' : '生成 PPT'}}</view>
+
+    <view wx:if="{{error}}" class="error-text error-box">{{error}}</view>
+
+    <view wx:if="{{hasDeck}}" class="btn btn-block btn-ghost view-deck" bindtap="onOpenDeck">查看上次生成的结果</view>
+  </view>
+
+  <block wx:else>
+    <!-- 进度面板 -->
+    <view class="card">
+      <view class="row-between">
+        <text class="card-title">{{meta && meta.title ? meta.title : '正在规划演示结构…'}}</text>
+        <view class="btn btn-sm btn-ghost" bindtap="onCancel">取消</view>
+      </view>
+
+      <view class="progress-track">
+        <view class="progress-fill" style="width: {{percent}}%;"></view>
+      </view>
+
+      <view wx:for="{{logs}}" wx:for-index="li" wx:key="li" class="stage-line">
+        <view class="stage-dot"></view>
+        <text>{{item.text}}</text>
+      </view>
+      <view class="stage-line">
+        <view class="stage-dot"></view>
+        <text>模型正在输出…</text>
+      </view>
+
+      <view class="stat-row">
+        <view class="stat">
+          <text class="stat-num">{{slides.length}}</text>
+          <text class="stat-label">已解析页数{{meta && meta.slideCount ? ' / 约 ' + meta.slideCount : ''}}</text>
+        </view>
+        <view class="stat">
+          <text class="stat-num">{{elapsedText}}</text>
+          <text class="stat-label">已用时</text>
+        </view>
+        <view class="stat">
+          <text class="stat-num">{{contentChars}}</text>
+          <text class="stat-label">输出字符</text>
+        </view>
+        <view class="stat">
+          <text class="stat-num">{{reasoningChars}}</text>
+          <text class="stat-label">思考字符</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 实时预览 -->
+    <view class="card">
+      <view class="row-between">
+        <text class="card-title">实时预览</text>
+        <text class="muted">每完成一页立即出现</text>
+      </view>
+
+      <view wx:if="{{slides.length === 0}}" class="empty">等待第一页生成…</view>
+
+      <view wx:else class="live-grid">
+        <view wx:for="{{slides}}" wx:for-index="si" wx:key="si" class="thumb">
+          <view class="thumb-scale" style="transform: scale({{thumbScale}});">
+            <slide slide="{{item}}" index="{{si}}" total="{{slides.length}}" deckTitle="{{meta.title}}" theme="{{theme}}"></slide>
+          </view>
+          <text class="thumb-badge">{{si + 1}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="btn btn-block btn-ghost" bindtap="onOpenAbout">使用说明 · 小知识</view>
+  <view class="safe-bottom"></view>
+</view>

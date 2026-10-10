@@ -1,0 +1,24 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/deck/deck",
+    "pages/player/player",
+    "pages/about/about"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#0b1020",
+    "navigationBarTitleText": "AI 网页 PPT",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0b1020"
+  },
+  "networkTimeout": {
+    "request": 300000,
+    "downloadFile": 120000,
+    "uploadFile": 120000,
+    "connectSocket": 60000
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

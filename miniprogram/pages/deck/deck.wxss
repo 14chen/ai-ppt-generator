@@ -1,0 +1,71 @@
+.deck-title {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 800;
+  margin-bottom: 8rpx;
+}
+
+.deck-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18rpx;
+}
+
+.deck-item {
+  width: 320rpx;
+}
+
+.thumb {
+  position: relative;
+  width: 320rpx;
+  height: 180rpx;
+  border-radius: 14rpx;
+  overflow: hidden;
+  border: 2rpx solid rgba(255, 255, 255, 0.1);
+  background-color: #0b1224;
+}
+
+.thumb-scale {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: top left;
+}
+
+.thumb-badge,
+.thumb-layout {
+  position: absolute;
+  padding: 2rpx 12rpx;
+  border-radius: 999rpx;
+  font-size: 20rpx;
+  color: #e9eefb;
+  background-color: rgba(6, 10, 22, 0.72);
+  border: 1rpx solid rgba(255, 255, 255, 0.16);
+}
+
+.thumb-badge {
+  left: 10rpx;
+  top: 10rpx;
+  font-weight: 700;
+}
+
+.thumb-layout {
+  right: 10rpx;
+  top: 10rpx;
+  opacity: 0.92;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.actions-row { gap: 18rpx; }
+
+.share-btn {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.share-btn::after { border: none; }

@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "slide": "/components/slide/slide"
+  },
+  "navigationBarTitleText": "演示",
+  "navigationStyle": "custom",
+  "disableScroll": true
+}

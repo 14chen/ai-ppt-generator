@@ -1,0 +1,137 @@
+<view class="s-root t-{{theme}}">
+  <view class="s-slide" data-layout="{{slide.layout}}">
+
+    <!-- 封面 / 结尾 -->
+    <block wx:if="{{slide.layout === 'cover' || slide.layout === 'closing'}}">
+      <view class="s-glow s-glow-a"></view>
+      <view class="s-glow s-glow-b"></view>
+      <view class="s-cover">
+        <view class="s-cover-inner">
+          <text wx:if="{{slide.layout === 'cover' && slide.subtitle}}" class="s-kicker s-accent-text">{{slide.subtitle}}</text>
+          <text class="s-title s-title-xl s-text">{{slide.title}}</text>
+          <view wx:if="{{slide.layout === 'cover'}}" class="s-rule s-accent-bg"></view>
+          <text wx:if="{{slide.layout === 'closing' && slide.subtitle}}" class="s-kicker-lg s-dim">{{slide.subtitle}}</text>
+          <view wx:if="{{meta.length > 0}}" class="s-cover-meta">
+            <text wx:for="{{meta}}" wx:key="*this" class="s-meta-chip s-chip">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 章节页 -->
+    <block wx:elif="{{slide.layout === 'section'}}">
+      <view class="s-inner s-inner-center">
+        <text class="s-section-idx s-accent-text">{{indexLabel}}</text>
+        <text class="s-title s-title-lg s-text">{{slide.title}}</text>
+        <text wx:if="{{slide.subtitle}}" class="s-sub s-sub-lg s-dim">{{slide.subtitle}}</text>
+      </view>
+    </block>
+
+    <!-- 数据页 -->
+    <block wx:elif="{{slide.layout === 'stats'}}">
+      <view class="s-inner">
+        <view class="s-head">
+          <text wx:if="{{slide.icon}}" class="s-chip s-icon s-chip">{{slide.icon}}</text>
+          <text class="s-title s-text">{{slide.title}}</text>
+          <text wx:if="{{slide.subtitle}}" class="s-sub s-dim">{{slide.subtitle}}</text>
+        </view>
+        <view class="s-body">
+          <view class="s-stats">
+            <view wx:for="{{slide.stats}}" wx:for-index="si" wx:key="si" class="s-stat s-card">
+              <text class="s-stat-value s-accent-text">{{item.value}}</text>
+              <text class="s-stat-label s-dim">{{item.label}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 金句页 -->
+    <block wx:elif="{{slide.layout === 'quote'}}">
+      <view class="s-inner">
+        <view class="s-head">
+          <text class="s-title s-text">{{slide.title}}</text>
+        </view>
+        <view class="s-body">
+          <view class="s-quote s-quote-card">
+            <view class="s-quote-bar s-accent-bg"></view>
+            <text class="s-quote-mark s-accent-text">“</text>
+            <text class="s-quote-text s-text">{{slide.quote.text}}</text>
+            <text wx:if="{{slide.quote.author}}" class="s-quote-author s-dim">— {{slide.quote.author}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 流程 / 时间线 -->
+    <block wx:elif="{{slide.layout === 'timeline'}}">
+      <view class="s-inner">
+        <view class="s-head">
+          <text class="s-title s-text">{{slide.title}}</text>
+          <text wx:if="{{slide.subtitle}}" class="s-sub s-dim">{{slide.subtitle}}</text>
+        </view>
+        <view class="s-body">
+          <view class="s-timeline">
+            <view wx:for="{{slide.steps}}" wx:for-index="ti" wx:key="ti" class="s-step">
+              <view class="s-step-dot s-accent-bg">
+                <text class="s-step-num s-on-accent">{{ti + 1}}</text>
+              </view>
+              <view class="s-step-body">
+                <text class="s-step-title s-text">{{item.title}}</text>
+                <text wx:if="{{item.detail}}" class="s-step-detail s-dim">{{item.detail}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 两栏 / 多栏 -->
+    <block wx:elif="{{slide.layout === 'two-column'}}">
+      <view class="s-inner">
+        <view class="s-head">
+          <text class="s-title s-text">{{slide.title}}</text>
+          <text wx:if="{{slide.subtitle}}" class="s-sub s-dim">{{slide.subtitle}}</text>
+        </view>
+        <view class="s-body">
+          <view class="s-columns" data-count="{{slide.columns.length}}">
+            <view wx:for="{{slide.columns}}" wx:for-index="ci" wx:key="ci" class="s-column s-card">
+              <text class="s-col-title s-accent-text">{{item.heading}}</text>
+              <view class="s-list s-list-sm">
+                <view wx:for="{{item.items}}" wx:for-item="line" wx:for-index="li" wx:key="li" class="s-li">
+                  <view class="s-li-mark s-accent-bg"></view>
+                  <text class="s-li-text s-text">{{line}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 要点页（默认） -->
+    <block wx:else>
+      <view class="s-inner">
+        <view class="s-head">
+          <text wx:if="{{slide.icon}}" class="s-icon s-chip">{{slide.icon}}</text>
+          <text class="s-title s-text">{{slide.title}}</text>
+          <text wx:if="{{slide.subtitle}}" class="s-sub s-dim">{{slide.subtitle}}</text>
+        </view>
+        <view class="s-body">
+          <view class="s-list">
+            <view wx:for="{{slide.bullets}}" wx:for-index="bi" wx:key="bi" class="s-li">
+              <view class="s-li-mark s-accent-bg"></view>
+              <text class="s-li-text s-text">{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 页脚 -->
+    <view class="s-foot">
+      <text class="s-brand s-dim">{{deckTitle}}</text>
+      <text class="s-num s-dim">{{pageLabel}}</text>
+    </view>
+  </view>
+</view>

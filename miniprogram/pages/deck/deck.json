@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "slide": "/components/slide/slide"
+  },
+  "navigationBarTitleText": "页面总览"
+}

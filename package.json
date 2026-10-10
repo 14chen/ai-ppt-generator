@@ -1,0 +1,46 @@
+{
+  "name": "ai-ppt-generator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AI 网页 PPT 生成器 — 粘贴长文案，调用大模型流式拆解为多页 PPT，前端渲染为可全屏演示、可导出独立 HTML 的网页 PPT。",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "node server/index.js --dev",
+    "build": "vite build",
+    "start": "node server/index.js",
+    "serve": "npm run build && npm start",
+    "typecheck": "tsc -p web/tsconfig.json",
+    "test": "node --test \"tests/unit/*.test.js\" \"tests/integration/*.test.js\"",
+    "test:unit": "node --test \"tests/unit/*.test.js\"",
+    "test:live": "node --test \"tests/live/*.test.js\"",
+    "test:acceptance": "node scripts/acceptance.mjs",
+    "test:e2e": "playwright test",
+    "pretest:e2e": "vite build",
+    "test:all": "npm run test && npm run build && npm run test:e2e",
+    "sync:themes": "node scripts/gen-miniprogram-themes.mjs",
+    "miniprogram:config": "node scripts/miniprogram-config.mjs",
+    "pptx:preview": "node scripts/pptx-preview.mjs",
+    "pptx:validate": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/validate-pptx.ps1"
+  },
+  "dependencies": {
+    "express": "^5.3.0",
+    "pptxgenjs": "^4.0.1",
+    "qrcode": "^1.5.4",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "jsqr": "^1.4.0",
+    "jszip": "^3.10.2",
+    "pngjs": "^7.0.0",
+    "typescript": "^5.9.0",
+    "vite": "^8.3.4"
+  }
+}

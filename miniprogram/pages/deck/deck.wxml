@@ -1,0 +1,62 @@
+<view class="page t-{{theme}}">
+
+  <view class="card">
+    <text class="deck-title">{{deck.title}}</text>
+    <text class="muted">{{metaText}}</text>
+  </view>
+
+  <view class="card">
+    <text class="card-title">配色主题</text>
+    <view class="theme-row">
+      <view
+        wx:for="{{themes}}"
+        wx:for-index="ti"
+        wx:key="ti"
+        class="theme-chip {{theme === item.id ? 'is-active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onPickTheme"
+      >
+        <view class="theme-swatch" style="background: linear-gradient(135deg, {{item.vars['ppt-slide-bg']}} 0%, {{item.vars['ppt-accent']}} 100%);"></view>
+        <text>{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="row-between">
+      <text class="card-title">全部页面</text>
+      <text class="muted">点击任意页开始演示</text>
+    </view>
+
+    <view class="deck-grid">
+      <view
+        wx:for="{{slides}}"
+        wx:for-index="si"
+        wx:key="si"
+        class="deck-item"
+        data-index="{{si}}"
+        bindtap="onOpenPlayer"
+      >
+        <view class="thumb">
+          <view class="thumb-scale" style="transform: scale({{thumbScale}});">
+            <slide slide="{{item}}" index="{{si}}" total="{{total}}" deckTitle="{{deck.title}}" theme="{{theme}}"></slide>
+          </view>
+          <text class="thumb-badge">{{si + 1}}</text>
+          <text class="thumb-layout">{{layouts[si]}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="actions">
+    <view class="btn btn-primary btn-block" bindtap="onPresent">开始演示</view>
+    <view class="btn btn-block" bindtap="onExport">{{exporting ? '正在生成 PPTX…' : '导出 PowerPoint (.pptx)'}}</view>
+    <view class="row actions-row">
+      <view class="btn btn-ghost grow" bindtap="onCopyJson">复制结构 JSON</view>
+      <view class="btn btn-ghost grow" bindtap="onRestart">重新生成</view>
+    </view>
+    <button class="btn btn-ghost btn-block share-btn" open-type="share">分享给好友</button>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>
