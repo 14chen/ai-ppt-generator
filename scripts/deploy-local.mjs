@@ -86,8 +86,11 @@ log(`  管理员: ${admin ? '是' : '否（防火墙/开机自启会跳过）'}`
 
 step(1, '复制源码（排除 node_modules / dist / test-results / .git）');
 fs.mkdirSync(DEST, { recursive: true });
-const EXCLUDE_DIRS = ['node_modules', 'dist', 'test-results', '.git', '.vite'];
-const EXCLUDE_FILES = ['*.log'];
+const EXCLUDE_DIRS = ['node_modules', 'dist', 'test-results', '.git', '.vite', 'logs', 'bin'];
+// .env is NEVER copied: the deployment owns its own copy (it holds the API key,
+// the access code and the public URL). Copying it over would silently disable
+// the access gate.
+const EXCLUDE_FILES = ['*.log', '.env', '.env.local', 'start-server.cmd'];
 const rc = run('robocopy', [
   SRC,
   DEST,

@@ -190,6 +190,21 @@ test('miniprogram: pptx export goes through the same server endpoint as the web 
 
 test('miniprogram: the project directory is inside the repo (not accidentally ignored)', () => {
   assert.ok(fs.existsSync(path.join(ROOT, 'miniprogram', 'app.json')));
+
   const gitignore = fs.readFileSync(path.join(ROOT, '.gitignore'), 'utf8');
-  assert.ok(!/miniprogram/.test(gitignore), '.gitignore must not exclude the mini program sources');
+  const lines = gitignore
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l && !l.startsWith('#'));
+
+  // Nothing may exclude the mini program sources as a whole.
+  for (const pattern of ['miniprogram', 'miniprogram/', '**/miniprogram', 'miniprogram/*']) {
+    assert.ok(!lines.includes(pattern), `.gitignore must not exclude the mini program sources (${pattern})`);
+  }
+
+  // The deployment config carries the access code, so it MUST be ignored …
+  assert.ok(lines.includes('miniprogram/config.js'), 'miniprogram/config.js (may hold the access code) must be ignored');
+  // … while its template is committed.
+  assert.ok(fs.existsSync(path.join(ROOT, 'miniprogram', 'config.example.js')), 'config.example.js template is missing');
+  assert.ok(!lines.includes('miniprogram/config.example.js'));
 });
