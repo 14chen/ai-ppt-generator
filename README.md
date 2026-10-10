@@ -53,6 +53,11 @@ npm start                 # Express 同时提供 API 与静态资源
 | `PUBLIC_URL` | 自动探测局域网 IP | 扫码回退地址 / 反向代理后的对外域名 |
 | `MINIPROGRAM_API_BASE` | 自动探测局域网 IP | 提示用户填进 `miniprogram/config.js` 的地址 |
 | `PPTX_FONT` | `Microsoft YaHei` | 导出 PPTX 使用的字体（中文必须显式指定，否则会变豆腐块） |
+| `ACCESS_CODE` | — | **公网部署必填**：设置后所有 `/api` 都需要访问码（浏览器换 HttpOnly cookie，小程序用 `X-Access-Code` 头） |
+| `RATE_LIMIT_MAX` | `10` | 每个客户端在窗口内可调用生成/导出接口的次数（`0` = 关闭） |
+| `RATE_LIMIT_WINDOW_MS` | `600000` | 限流窗口（默认 10 分钟） |
+| `RATE_LIMIT_EXEMPT_LOCAL` | `1` | 本机直连不限流（隧道进来的流量仍然计数） |
+| `TRUST_PROXY` | `0` | 强制信任 `X-Forwarded-For`（默认只信任来自 loopback 代理的请求头） |
 
 > 环境变量优先于 `.env` 文件（Node `process.loadEnvFile` 语义），因此 CI/测试可以安全地覆盖配置。
 
@@ -169,6 +174,72 @@ event: done      data: {"deck":{…}}
 
 ---
 
+## 部署与公网访问
+
+### 一条命令部署到本机
+
+```bash
+node scripts/deploy-local.mjs                 # 默认部署到 F:\devbox\ai-ppt-generator
+DEPLOY_DIR=D:\apps\ppt node scripts/deploy-local.mjs
+```
+
+它会：复制源码（**从不复制 `.env`**）→ `npm install` → `vite build` →
+写入 `.env`（`HOST=0.0.0.0` + 随机生成的 `ACCESS_CODE` + 限流参数）→
+放行防火墙 → 注册开机自启的计划任务（`AI-PPT-Generator`）→ 启动并自检。
+
+后续更新代码：
+
+```bash
+node scripts/sync-deploy.mjs        # 同步源码 + 重新构建 + 重启 + 自检（保留部署自己的 .env）
+```
+
+### 让其他人从公网访问
+
+```bash
+# 1) 起隧道（进程活着期间有效）
+ssh -o StrictHostKeyChecking=no -R 80:localhost:8787 nokey@localhost.run
+#    输出里的 https://xxxx.lhr.life 就是公网地址
+
+# 2) 把公网地址写进部署配置（同时更新小程序的 API_BASE / ACCESS_CODE），并重启
+node scripts/set-public-url.mjs https://xxxx.lhr.life
+
+# 3) 从公网侧完整验收一遍
+node --use-system-ca scripts/verify-public.mjs https://xxxx.lhr.life <ACCESS_CODE>
+```
+
+把 **公网地址 + 访问码** 发给使用者即可，他们打开网页、输入访问码就能用；
+手机扫码（右上角「扫码使用」）会直接打开网页版，小程序端则用
+`miniprogram/config.js` 里的地址 + 访问码访问同一个后端。
+
+> **隧道选择与限流的注意事项**（已实测）：
+> * `localhost.run` 这类 SSH 隧道**不转发客户端 IP**，服务端看到的都是 `127.0.0.1`，
+>   因此所有公网访客共用一个限流额度（默认 10 次 / 10 分钟，合计）。
+>   代码里用 `Host` 头把「隧道流量」和「本机直连」区分开，所以本机仍然豁免、公网仍然计数。
+> * `cloudflared` 会带上 `CF-Connecting-IP`，可以做到**按访客分别限流**，更推荐：
+>   ```bash
+>   node --use-system-ca scripts/get-cloudflared.mjs F:\devbox\bin
+>   F:\devbox\bin\cloudflared.exe tunnel --url http://localhost:8787 --no-autoupdate
+>   ```
+> * 临时隧道每次重启都会换地址，记得重新执行 `set-public-url.mjs`。
+>   想要固定域名需要用 cloudflared 命名隧道（需要 Cloudflare 账号）或自己的 HTTPS 域名。
+
+### 发布到 GitHub
+
+推送必须用你自己的凭据：GitHub 从 2021 年起**不再支持密码认证**，只能用
+Personal Access Token 或 SSH key。仓库我已经在 `F:\devbox\ai-ppt-generator` 里初始化好了：
+
+```bash
+node scripts/publish-github.mjs <你的GitHub用户名> ai-ppt-generator
+# 然后按提示在浏览器新建空仓库，并执行：
+cd F:\devbox\ai-ppt-generator
+git push -u origin main
+```
+
+脚本会先做**密钥体检**：确认 `.env` / `logs/` / `node_modules/` / `bin/` 都被忽略，
+并扫描暂存内容里有没有真实的 `sk-…` API Key 或访问码，发现问题直接终止提交。
+
+---
+
 ## 微信小程序端
 
 `miniprogram/` 是一个完整的原生小程序工程，与网页端**共用同一个后端、同一套 SSE 协议、同一份主题色**。
@@ -267,14 +338,20 @@ event: done      data: {"deck":{…}}
 ## 测试
 
 ```bash
-npm test            # 单元 + 集成（89 个用例，全部离线、确定性）
+npm test            # 单元 + 集成（114 个用例，全部离线、确定性）
 npm run test:live   # 真实调用 deepseek-v4-pro 的接口冒烟测试（需要 .env 中的 Key）
-npm run build && npm run test:e2e   # Playwright 浏览器端到端（8 个用例，mock 上游）
+npm run build && npm run test:e2e   # Playwright 浏览器端到端（12 个用例，含访问门禁）
 npm run typecheck   # 前端 TypeScript 检查
 
 # 完整验收：真实模型 + 真实浏览器 + PowerPoint 亲自打开导出文件（需先启动服务）
 npm run dev                      # 另开一个终端
 npm run test:acceptance          # 输入→流式生成→演示→翻页→主题→HTML/PPTX 导出→离线→扫码→移动端
+
+# 部署与公网
+node scripts/deploy-local.mjs                      # 部署到 F:\devbox 并开机自启
+node scripts/sync-deploy.mjs                       # 改了代码后同步（保留部署的 .env）
+node scripts/set-public-url.mjs https://xxx        # 写入公网地址并重启
+node --use-system-ca scripts/verify-public.mjs https://xxx <访问码>   # 公网侧验收
 
 # 单独看导出的 PPTX 长什么样：生成样例 → PowerPoint 校验 → 逐页导出 PNG
 npm run pptx:preview midnight
@@ -286,7 +363,7 @@ npm run sync:themes              # 改了主题后同步小程序端的主题类
 
 覆盖范围：
 
-* **单元**（`tests/unit`，50 个用例）：
+* **单元**（`tests/unit`，64 个用例）：
   * 流式解析器：逐字符喂入、单文档容器、代码块围栏、截断、去重、上限、嵌套片段不成为页面、字符串内括号；
   * 幻灯片规范化：别名、布局推断、降级、限额、去重、bookends；
   * **PPTX**：OOXML 必需部件齐全、每个 XML 部件 well-formed（自写栈式校验）、页面尺寸是 13.333×7.5 英寸、
@@ -294,11 +371,14 @@ npm run sync:themes              # 改了主题后同步小程序端的主题类
   * **小程序工具链**：UTF-8 增量解码（按 1..17 字节切分中文）、SSE 分帧、`streamGenerate` 用假 `wx` 跑通成功/错误/降级三条路径；
   * **小程序工程**：所有 `.js` 可编译、`.json` 可解析、页面与组件文件齐全、`usingComponents`/`require`/`@import` 路径都存在、
     WXML 里的事件处理函数在对应 `.js` 里真的存在、主题生成文件与播放器运行时**完全一致**（过期即失败）。
-* **集成**（`tests/integration`，31 个用例）：
+* **集成**（`tests/integration`，50 个用例）：
   * 生成链路：SSE 事件序列、reasoning 与正文分流、参数校验（400/413/503）、上游 401 的友好提示、客户端断连后服务仍可用、上游截断仍能产出完整页面；
   * 导出链路：`/api/export/pptx` 的类型/文件名/页数/主题、坏 payload 与超限的报错、**恶意 deck 会被重新规范化而不是照单全收**；
   * 扫码链路：H5 回退二维码**用 jsQR 真实解码**（证明相机可读）、`PUBLIC_URL` 覆盖、配置微信凭据后返回小程序码（打桩微信开放接口）、
     凭据失效自动降级、**access_token 按凭据缓存（换 AppID 必须重新获取）**；
+  * 公网保护：未带访问码一律 401、错码被拒、正确码下发 HttpOnly cookie、**header 形式（小程序）可用**、
+    `/api/session` 返回 token、退出登录清 cookie、限流在第 N+1 次返回 429、**按客户端分桶**（含 `CF-Connecting-IP`）、
+    **隧道流量即使来自 loopback 也会被计数**、关掉 `ACCESS_CODE` 后门禁自动解除；
   * **Microsoft PowerPoint 亲自打开**生成的 `.pptx`（COM），核对页数、页面尺寸、每页文字、演讲者备注、无空白页；
   * **小程序的真实客户端代码**（`miniprogram/utils/api.js`）通过 `fetch` 版 `wx` 打桩直连真实后端：流式收流、
     分块切断的多字节中文、导出 pptx → 写入文件 → `openDocument` 交接。
